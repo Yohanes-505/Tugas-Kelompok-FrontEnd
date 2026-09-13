@@ -1,5 +1,7 @@
 const tombolBuat = document.getElementById('buat');
 const tombolHitung = document.getElementById('hitung');
+const pilihOperasi = document.getElementById('operasi');
+const kotakNilaiEkstra = document.getElementById('kotakNilaiEkstra');
 
 tombolBuat.addEventListener('click', function() {
     const barisA = parseInt(document.getElementById('barisA').value);
@@ -175,19 +177,68 @@ tombolHitung.addEventListener('click', function() {
     else if (operasi === 'transpose') {
         let MatriksHasil = [];
 
-        // hasil transpose: jumlah barisnya = jumlah kolom matriks asal
         for (let i = 0; i < kolomA; i++) {
             let barisHasil = [];
             for (let j = 0; j < barisA; j++) {
-                barisHasil.push(MatriksA[j][i]);   // indeks ditukar
+                barisHasil.push(MatriksA[j][i]);
             }
             MatriksHasil.push(barisHasil);
         }
 
         teksHasil = "<strong>Transpose Matriks A:</strong>" + buatTabel(MatriksHasil);
     }
+else if (operasi === 'skalar') {
+    const skalar = parseFloat(document.getElementById('nilaiEkstra').value);
+    if (isNaN(skalar)) {
+        teksHasil = "<span class='pesan-error'>Error: Isi dulu nilai skalarnya.</span>";
+    } else {
+        let MatriksHasil = [];
+        for (let i = 0; i < barisA; i++) {
+            let barisHasil = [];
+            for (let j = 0; j < kolomA; j++) {
+                barisHasil.push(MatriksA[i][j] * skalar);
+            }
+            MatriksHasil.push(barisHasil);
+        }
+        teksHasil = "<strong>Hasil " + skalar + " x Matriks A:</strong>" + buatTabel(MatriksHasil);
+    }
+}
+else if (operasi === 'pangkat') {
+    const pangkat = parseInt(document.getElementById('nilaiEkstra').value);
+    if (barisA !== kolomA) {
+        teksHasil = "<span class='pesan-error'>Error: Pangkat matriks hanya untuk matriks persegi.</span>";
+    } else if (isNaN(pangkat) || pangkat < 1) {
+        teksHasil = "<span class='pesan-error'>Error: Isi dulu pangkatnya (bilangan bulat positif).</span>";
+    } else {
+        let MatriksHasil = MatriksA;
+        for (let p = 1; p < pangkat; p++) {
+            let sementara = [];
+            for (let i = 0; i < MatriksHasil.length; i++) {
+                let barisHasil = [];
+                for (let j = 0; j < MatriksA[0].length; j++) {
+                    let total = 0;
+                    for (let k = 0; k < MatriksA.length; k++) {
+                        total += MatriksHasil[i][k] * MatriksA[k][j];
+                    }
+                    barisHasil.push(total);
+                }
+                sementara.push(barisHasil);
+            }
+            MatriksHasil = sementara;
+        }
+        teksHasil = "<strong>Matriks A pangkat " + pangkat + ":</strong>" + buatTabel(MatriksHasil);
+    }
+}
 
     document.getElementById('tampilanHasil').innerHTML = teksHasil;
+});
+
+pilihOperasi.addEventListener('change', function() {
+    if (pilihOperasi.value === 'skalar' || pilihOperasi.value === 'pangkat') {
+        kotakNilaiEkstra.style.display = 'block';
+    } else {
+        kotakNilaiEkstra.style.display = 'none';
+    }
 });
 
 function buatTabel(arrayMatriks) {
