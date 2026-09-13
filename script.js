@@ -18,12 +18,12 @@ tombolBuat.addEventListener('click', function() {
         return;
     }
 
-    let MatriksA = '<p><strong>Matriks A:</strong></p><table style="border-collapse: collapse; margin: 10px 0; background-color: #ffffff;">';
+    let MatriksA = '<p><strong>Matriks A:</strong></p><table class="matriks-tabel">';
     for (let i = 0; i < barisA; i++) {
         MatriksA += '<tr>';
         for (let j = 0; j < kolomA; j++) {
             let nilai = Math.floor(Math.random() * 9) + 1;
-            MatriksA += `<td id="A_${i}_${j}" style="border: 1px solid #000000; padding: 10px 15px; text-align: center; font-size: 16px; min-width: 35px;">${nilai}</td>`;
+            MatriksA += `<td id="A_${i}_${j}">${nilai}</td>`;
         }
         MatriksA += '</tr>';
     }
@@ -42,12 +42,12 @@ tombolBuat.addEventListener('click', function() {
             return;
         }
 
-        let MatriksB = '<p><strong>Matriks B:</strong></p><table style="border-collapse: collapse; margin: 10px 0; background-color: #ffffff;">';
+        let MatriksB = '<p><strong>Matriks B:</strong></p><table class="matriks-tabel">';
         for (let i = 0; i < barisB; i++) {
             MatriksB += '<tr>';
             for (let j = 0; j < kolomB; j++) {
                 let nilai = Math.floor(Math.random() * 9) + 1;
-                MatriksB += `<td id="B_${i}_${j}" style="border: 1px solid #000000; padding: 10px 15px; text-align: center; font-size: 16px; min-width: 35px;">${nilai}</td>`;
+                MatriksB += `<td id="B_${i}_${j}">${nilai}</td>`;
             }
             MatriksB += '</tr>';
         }
@@ -99,9 +99,9 @@ tombolHitung.addEventListener('click', function() {
 
     if (operasi === 'tambah') {
         if (!document.getElementById('B_0_0') || isNaN(barisB) || isNaN(kolomB)) {
-            teksHasil = "<span style='color:red;'>Error: Matriks B belum dibuat.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Matriks B belum dibuat.</span>";
         } else if (barisA !== barisB || kolomA !== kolomB) {
-            teksHasil = "<span style='color:red;'>Error: Ordo Matriks A dan B harus sama persis.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Ordo Matriks A dan B harus sama persis.</span>";
         } else {
             let MatriksHasil = [];
             for (let i = 0; i < barisA; i++) {
@@ -116,9 +116,9 @@ tombolHitung.addEventListener('click', function() {
     } 
     else if (operasi === 'kurang') {
         if (!document.getElementById('B_0_0') || isNaN(barisB) || isNaN(kolomB)) {
-            teksHasil = "<span style='color:red;'>Error: Matriks B belum dibuat.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Matriks B belum dibuat.</span>";
         } else if (barisA !== barisB || kolomA !== kolomB) {
-            teksHasil = "<span style='color:red;'>Error: Ordo Matriks A dan B harus sama persis.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Ordo Matriks A dan B harus sama persis.</span>";
         } else {
             let MatriksHasil = [];
             for (let i = 0; i < barisA; i++) {
@@ -133,9 +133,9 @@ tombolHitung.addEventListener('click', function() {
     } 
     else if (operasi === 'kali') {
         if (!document.getElementById('B_0_0') || isNaN(barisB) || isNaN(kolomB)) {
-            teksHasil = "<span style='color:red;'>Error: Matriks B belum dibuat.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Matriks B belum dibuat.</span>";
         } else if (kolomA !== barisB) {
-            teksHasil = "<span style='color:red;'>Error: Kolom Matriks A harus sama dengan Baris Matriks B.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Kolom Matriks A harus sama dengan Baris Matriks B.</span>";
         } else {
             let MatriksHasil = [];
             for (let i = 0; i < barisA; i++) {
@@ -154,7 +154,7 @@ tombolHitung.addEventListener('click', function() {
     } 
     else if (operasi === 'determinan') {
         if (barisA !== kolomA) {
-            teksHasil = "<span style='color:red;'>Error: Determinan hanya untuk matriks persegi.</span>";
+            teksHasil = "<span class='pesan-error'>Error: Determinan hanya untuk matriks persegi.</span>";
         } else if (barisA === 1) {
             teksHasil = "<strong>Determinan: </strong>" + MatriksA[0][0];
         } else if (barisA === 2) {
@@ -169,19 +169,33 @@ tombolHitung.addEventListener('click', function() {
                              (MatriksA[0][1] * MatriksA[1][0] * MatriksA[2][2]);
             teksHasil = "<strong>Determinan (3x3): </strong>" + determinan;
         } else {
-            teksHasil = "<span style='color:red;'>Maksimal ordo 3x3 untuk determinan.</span>";
+            teksHasil = "<span class='pesan-error'>Maksimal ordo 3x3 untuk determinan.</span>";
         }
+    }
+    else if (operasi === 'transpose') {
+        let MatriksHasil = [];
+
+        // hasil transpose: jumlah barisnya = jumlah kolom matriks asal
+        for (let i = 0; i < kolomA; i++) {
+            let barisHasil = [];
+            for (let j = 0; j < barisA; j++) {
+                barisHasil.push(MatriksA[j][i]);   // indeks ditukar
+            }
+            MatriksHasil.push(barisHasil);
+        }
+
+        teksHasil = "<strong>Transpose Matriks A:</strong>" + buatTabel(MatriksHasil);
     }
 
     document.getElementById('tampilanHasil').innerHTML = teksHasil;
 });
 
 function buatTabel(arrayMatriks) {
-    let tabel = '<table style="border-collapse: collapse; margin: 10px 0; background-color: #ffffff;">';
+    let tabel = '<table class="matriks-tabel">';
     for (let i = 0; i < arrayMatriks.length; i++) {
         tabel += '<tr>';
         for (let j = 0; j < arrayMatriks[i].length; j++) {
-            tabel += `<td style="border: 1px solid #000000; padding: 10px 15px; text-align: center; font-size: 16px; min-width: 35px;">${arrayMatriks[i][j]}</td>`;
+            tabel += `<td>${arrayMatriks[i][j]}</td>`;
         }
         tabel += '</tr>';
     }
