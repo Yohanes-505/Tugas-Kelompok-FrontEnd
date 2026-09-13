@@ -24,8 +24,7 @@ tombolBuat.addEventListener('click', function() {
     for (let i = 0; i < barisA; i++) {
         MatriksA += '<tr>';
         for (let j = 0; j < kolomA; j++) {
-            let nilai = Math.floor(Math.random() * 9) + 1;
-            MatriksA += `<td id="A_${i}_${j}">${nilai}</td>`;
+            MatriksA += `<td><input type="number" id="A_${i}_${j}" class="input-matriks" placeholder="0"></td>`;
         }
         MatriksA += '</tr>';
     }
@@ -48,8 +47,7 @@ tombolBuat.addEventListener('click', function() {
         for (let i = 0; i < barisB; i++) {
             MatriksB += '<tr>';
             for (let j = 0; j < kolomB; j++) {
-                let nilai = Math.floor(Math.random() * 9) + 1;
-                MatriksB += `<td id="B_${i}_${j}">${nilai}</td>`;
+                MatriksB += `<td><input type="number" id="B_${i}_${j}" class="input-matriks" placeholder="0"></td>`;
             }
             MatriksB += '</tr>';
         }
@@ -78,7 +76,7 @@ tombolHitung.addEventListener('click', function() {
         let baris = [];
         for (let j = 0; j < kolomA; j++) {
             let elemen = document.getElementById(`A_${i}_${j}`);
-            let nilai = elemen ? (parseFloat(elemen.textContent || elemen.value) || 0) : 0;
+            let nilai = elemen ? (elemen.value !== undefined && !isNaN(parseFloat(elemen.value)) ? parseFloat(elemen.value) : (parseFloat(elemen.textContent) || 0)) : 0;
             baris.push(nilai);
         }
         MatriksA.push(baris);
@@ -90,7 +88,7 @@ tombolHitung.addEventListener('click', function() {
             let baris = [];
             for (let j = 0; j < kolomB; j++) {
                 let elemen = document.getElementById(`B_${i}_${j}`);
-                let nilai = elemen ? (parseFloat(elemen.textContent || elemen.value) || 0) : 0;
+                let nilai = elemen ? (elemen.value !== undefined && !isNaN(parseFloat(elemen.value)) ? parseFloat(elemen.value) : (parseFloat(elemen.textContent) || 0)) : 0;
                 baris.push(nilai);
             }
             MatriksB.push(baris);

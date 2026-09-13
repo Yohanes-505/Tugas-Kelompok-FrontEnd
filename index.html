@@ -1,3 +1,11 @@
+<!-- Tugas Kelompok Front End Programming - Kalkulator Matriks
+Kelompok 4
+- 535250054 - Yohanes Phandry
+- 535250071 - Khresnanda Putra Wirawan
+- 535250079 - Kenzie Agustin
+- 535250092 - Elfrandt Goldjer
+- 535250095 - Nicho Louis Salim -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,56 +15,60 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Kalkulator Matriks</h1>
+    <header>
+        <div class="judulBesar">
+            <h1><strong>Kalkulator Matriks</strong></h1>
+        </div>
+    </header>
     
-    <hr>
+    <div class="container">
+        <p class="judul"><strong>Ordo Matriks</strong></p>
+        
+        <div class="form">
+            <p><strong>Matriks A</strong></p>
+            <label>Baris (a): <input type="number" id="barisA" min="1" max="5" placeholder="Maks: 5"></label>
+            <label>Kolom (b): <input type="number" id="kolomA" min="1" max="5" placeholder="Maks: 5"></label>
+        </div>
+        
+        <div class="form">
+            <p><strong>Matriks B</strong></p>
+            <label>Baris (a): <input type="number" id="barisB" min="1" max="5" placeholder="Maks: 5"></label>
+            <label>Kolom (b): <input type="number" id="kolomB" min="1" max="5" placeholder="Maks: 5"></label>
+        </div>
+        <button id="buat">Generate</button>
 
-    <p class="judul">Ordo Matriks</p>
-    
-    <div class="form">
-        <p><strong>Matriks A</strong></p>
-        <label>Baris (a): <input type="number" id="barisA" min="1" max="5" placeholder="Maks: 5"></label>
-        <label>Kolom (b): <input type="number" id="kolomA" min="1" max="5" placeholder="Maks: 5"></label>
-    </div>
-    
-    <div class="form">
-        <p><strong>Matriks B</strong></p>
-        <label>Baris (a): <input type="number" id="barisB" min="1" max="5" placeholder="Maks: 5"></label>
-        <label>Kolom (b): <input type="number" id="kolomB" min="1" max="5" placeholder="Maks: 5"></label>
-    </div>
-    <button id="buat">Generate</button>
+        <hr>
 
-    <hr>
+        <p class="judul"><strong>Operasi Matriks</strong></p>
+        <div class="form">
+            <select id="operasi">
+                <option value="tambah">Penjumlahan (+)</option>
+                <option value="kurang">Pengurangan (-)</option>
+                <option value="kali">Perkalian (x)</option>
+                <option value="skalar">Perkalian Skalar (k x A)</option>
+                <option value="pangkat">Pangkat Matriks A (A^n)</option>
+                <option value="determinan">Determinan Matriks A</option>
+                <option value="transpose">Transpose Matriks A</option>
+            </select>
+            <p id="kotakNilaiEkstra" style="display: none;"><label>Nilai (untuk skalar / pangkat): <input type="number" id="nilaiEkstra" placeholder="misal: 2"></label></p>
+        </div>
 
-    <p class="judul">Operasi Matriks</p>
-    <div class="form">
-        <select id="operasi">
-            <option value="tambah">Penjumlahan (+)</option>
-            <option value="kurang">Pengurangan (-)</option>
-            <option value="kali">Perkalian (x)</option>
-            <option value="skalar">Perkalian Skalar (k x A)</option>
-            <option value="pangkat">Pangkat Matriks A (A^n)</option>
-            <option value="determinan">Determinan Matriks A</option>
-            <option value="transpose">Transpose Matriks A</option>
-        </select>
-        <p id="kotakNilaiEkstra" style="display: none;"><label>Nilai (untuk skalar / pangkat): <input type="number" id="nilaiEkstra" placeholder="misal: 2"></label></p>
-    </div>
+        <div id="matriksA" class="matriks">
+            <p><em>Kotak Matriks A</em></p>
+        </div>
 
-    <div id="matriksA" class="matriks">
-        <p><em>Kotak Matriks A</em></p>
-    </div>
+        <div id="matriksB" class="matriks">
+            <p><em>Kotak Matriks B</em></p>
+        </div>
 
-    <div id="matriksB" class="matriks">
-        <p><em>Kotak Matriks B</em></p>
-    </div>
+        <button id="hitung">Hitung Matriks</button>
 
-    <button id="hitung">Hitung Matriks</button>
+        <hr>
 
-    <hr>
-
-    <p class="judul">Hasil Perhitungan:</p>
-    <div id="hasilOperasi">
-        <span id="tampilanHasil">Belum ada perhitungan.</span>
+        <p class="judul">Hasil Perhitungan:</p>
+        <div id="hasilOperasi">
+            <span id="tampilanHasil">Belum ada perhitungan.</span>
+        </div>
     </div>
 
     <script src="script.js"></script>
