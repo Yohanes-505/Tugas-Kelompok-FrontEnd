@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Matriks</title>
+</head>
+<body>
+    <h1>Kalkulator Matriks</h1>
+    
+    <hr>
+
+    <p class="judul">Ordo Matriks</p>
+    
+    <div class="form">
+        <p><strong>Matriks A</strong></p>
+        <label>Baris (a): <input type="number" id="barisA" min="1" max="5" placeholder="Maks: 5"></label>
+        <label>Kolom (b): <input type="number" id="kolomA" min="1" max="5" placeholder="Maks: 5"></label>
+    </div>
+    
+    <div class="form">
+        <p><strong>Matriks B</strong></p>
+        <label>Baris (a): <input type="number" id="barisB" min="1" max="5" placeholder="Maks: 5"></label>
+        <label>Kolom (b): <input type="number" id="kolomB" min="1" max="5" placeholder="Maks: 5"></label>
+    </div>
+    <br>
+    <button id="buat">Generate</button>
+
+    <hr>
+
+    <p class="judul">Operasi Matriks</p>
+    <div class="form">
+        <select id="operasi">
+            <option value="tambah">Penjumlahan (+)</option>
+            <option value="kurang">Pengurangan (-)</option>
+            <option value="kali">Perkalian (x)</option>
+            <option value="determinan">Determinan Matriks A</option>
+        </select>
+    </div>
+
+    <div id="matriksA" class="matriks">
+        <p><em>Kotak Matriks A</em></p>
+    </div>
+
+    <div id="matriksB" class="matriks">
+        <p><em>Kotak Matriks B</em></p>
+    </div>
+
+    <button id="hitung">Hitung Matriks</button>
+
+    <hr>
+
+    <p class="judul">Hasil Perhitungan:</p>
+    <div id="hasilOperasi">
+        <span id="tampilanHasil">Belum ada perhitungan.</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
