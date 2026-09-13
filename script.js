@@ -172,6 +172,21 @@ tombolHitung.addEventListener('click', function() {
             teksHasil = "<span style='color:red;'>Maksimal ordo 3x3 untuk determinan.</span>";
         }
     }
+    
+    else if (operasi === 'transpose') {
+    let MatriksHasil = [];
+
+    // hasil transpose: jumlah barisnya = jumlah kolom matriks asal
+    for (let i = 0; i < kolomA; i++) {
+        let barisHasil = [];
+        for (let j = 0; j < barisA; j++) {
+            barisHasil.push(MatriksA[j][i]);   // indeks ditukar
+        }
+        MatriksHasil.push(barisHasil);
+    }
+
+    teksHasil = "<strong>Transpose Matriks A:</strong>" + buatTabel(MatriksHasil);
+}
 
     document.getElementById('tampilanHasil').innerHTML = teksHasil;
 });
