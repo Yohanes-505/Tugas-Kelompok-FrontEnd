@@ -185,6 +185,20 @@ tombolHitung.addEventListener('click', function() {
 
         teksHasil = "<strong>Transpose Matriks A:</strong>" + buatTabel(MatriksHasil);
     }
+    else if (operasi === 'invers') {
+        if (barisA !== kolomA) {
+            teksHasil = "<span class='pesan-error'>Error: Invers hanya untuk matriks persegi.</span>";
+        } else {
+            let MatriksHasil = invertMatrix(MatriksA);
+            if (MatriksHasil === null) {
+                teksHasil = "<span class='pesan-error'>Error: Matriks singular (determinan = 0), tidak punya invers.</span>";
+            } else {
+                // Bulatkan 4 desimal biar ga muncul noise floating point (misal 0.9999999999)
+                let MatriksBulat = MatriksHasil.map(baris => baris.map(v => Math.round(v * 10000) / 10000));
+                teksHasil = "<strong>Invers Matriks A:</strong>" + buatTabel(MatriksBulat);
+            }
+        }
+    }
 else if (operasi === 'skalar') {
     const skalar = parseFloat(document.getElementById('nilaiEkstra').value);
     if (isNaN(skalar)) {
@@ -238,6 +252,50 @@ pilihOperasi.addEventListener('change', function() {
         kotakNilaiEkstra.style.display = 'none';
     }
 });
+
+function invertMatrix(matrix) {
+    const n = matrix.length;
+
+    let aug = matrix.map((baris, i) => {
+        let identitas = new Array(n).fill(0);
+        identitas[i] = 1;
+        return [...baris, ...identitas];
+    });
+
+    for (let i = 0; i < n; i++) {
+        let pivot = aug[i][i];
+
+        if (pivot === 0) {
+            let barisTukar = -1;
+            for (let k = i + 1; k < n; k++) {
+                if (aug[k][i] !== 0) {
+                    barisTukar = k;
+                    break;
+                }
+            }
+            if (barisTukar === -1) {
+                return null;
+            }
+            [aug[i], aug[barisTukar]] = [aug[barisTukar], aug[i]];
+            pivot = aug[i][i];
+        }
+
+        for (let j = 0; j < 2 * n; j++) {
+            aug[i][j] = aug[i][j] / pivot;
+        }
+
+        for (let k = 0; k < n; k++) {
+            if (k !== i) {
+                let faktor = aug[k][i];
+                for (let j = 0; j < 2 * n; j++) {
+                    aug[k][j] -= faktor * aug[i][j];
+                }
+            }
+        }
+    }
+
+    return aug.map(baris => baris.slice(n));
+}
 
 function buatTabel(arrayMatriks) {
     let tabel = '<table class="matriks-tabel">';
