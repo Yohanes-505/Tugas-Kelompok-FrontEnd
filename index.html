@@ -35,10 +35,11 @@ Kelompok 4
             <label>Baris (a): <input type="number" id="barisB" min="1" max="5" placeholder="Maks: 5"></label>
             <label>Kolom (b): <input type="number" id="kolomB" min="1" max="5" placeholder="Maks: 5"></label>
         </div>
+             <p id="statusOrdo" class="petunjuk"></p>
         <button id="buat">Generate</button>
 
         <hr>
-
+           
         <p class="judul"><strong>Operasi Matriks</strong></p>
         <div class="form">
             <select id="operasi">
@@ -51,6 +52,7 @@ Kelompok 4
                 <option value="transpose">Transpose Matriks A</option>
                 <option value="invers">Invers Matriks A (A⁻¹)</option>
             </select>
+         <div id="petunjukOperasi" class="petunjuk-kotak"></div>
             <p id="kotakNilaiEkstra" style="display: none;"><label>Nilai (untuk skalar / pangkat): <input type="number" id="nilaiEkstra" placeholder="misal: 2"></label></p>
         </div>
 
