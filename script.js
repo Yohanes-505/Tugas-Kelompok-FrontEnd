@@ -2,6 +2,8 @@ const tombolBuat = document.getElementById('buat');
 const tombolHitung = document.getElementById('hitung');
 const pilihOperasi = document.getElementById('operasi');
 const kotakNilaiEkstra = document.getElementById('kotakNilaiEkstra');
+const petunjukOperasi = document.getElementById('petunjukOperasi');
+const statusOrdo = document.getElementById('statusOrdo');
 
 tombolBuat.addEventListener('click', function() {
     const barisA = parseInt(document.getElementById('barisA').value);
@@ -104,14 +106,18 @@ tombolHitung.addEventListener('click', function() {
             teksHasil = "<span class='pesan-error'>Error: Ordo Matriks A dan B harus sama persis.</span>";
         } else {
             let MatriksHasil = [];
+            let langkah = [];
             for (let i = 0; i < barisA; i++) {
                 let barisHasil = [];
                 for (let j = 0; j < kolomA; j++) {
-                    barisHasil.push(MatriksA[i][j] + MatriksB[i][j]);
+                    let nilai = MatriksA[i][j] + MatriksB[i][j];
+                    barisHasil.push(nilai);
+                    langkah.push("Posisi (" + (i + 1) + "," + (j + 1) + ") : " +
+                                 MatriksA[i][j] + " + " + MatriksB[i][j] + " = " + nilai);
                 }
                 MatriksHasil.push(barisHasil);
             }
-            teksHasil = buatTabel(MatriksHasil);
+            teksHasil = buatTabel(MatriksHasil) + buatKotakLangkah(langkah);
         }
     } 
     else if (operasi === 'kurang') {
@@ -121,14 +127,18 @@ tombolHitung.addEventListener('click', function() {
             teksHasil = "<span class='pesan-error'>Error: Ordo Matriks A dan B harus sama persis.</span>";
         } else {
             let MatriksHasil = [];
+            let langkah = [];
             for (let i = 0; i < barisA; i++) {
                 let barisHasil = [];
                 for (let j = 0; j < kolomA; j++) {
-                    barisHasil.push(MatriksA[i][j] - MatriksB[i][j]);
+                    let nilai = MatriksA[i][j] - MatriksB[i][j];
+                    barisHasil.push(nilai);
+                    langkah.push("Posisi (" + (i + 1) + "," + (j + 1) + ") : " +
+                                 MatriksA[i][j] + " - " + MatriksB[i][j] + " = " + nilai);
                 }
                 MatriksHasil.push(barisHasil);
             }
-            teksHasil = buatTabel(MatriksHasil);
+            teksHasil = buatTabel(MatriksHasil) + buatKotakLangkah(langkah);
         }
     } 
     else if (operasi === 'kali') {
@@ -138,18 +148,23 @@ tombolHitung.addEventListener('click', function() {
             teksHasil = "<span class='pesan-error'>Error: Kolom Matriks A harus sama dengan Baris Matriks B.</span>";
         } else {
             let MatriksHasil = [];
+            let langkah = [];
             for (let i = 0; i < barisA; i++) {
                 let barisHasil = [];
                 for (let j = 0; j < kolomB; j++) {
                     let totalSuku = 0;
+                    let rincian = [];
                     for (let k = 0; k < kolomA; k++) {
                         totalSuku = totalSuku + (MatriksA[i][k] * MatriksB[k][j]);
+                        rincian.push("(" + MatriksA[i][k] + " x " + MatriksB[k][j] + ")");
                     }
                     barisHasil.push(totalSuku);
+                    langkah.push("Posisi (" + (i + 1) + "," + (j + 1) + ") : " +
+                                 rincian.join(" + ") + " = " + totalSuku);
                 }
                 MatriksHasil.push(barisHasil);
             }
-            teksHasil = buatTabel(MatriksHasil);
+            teksHasil = buatTabel(MatriksHasil) + buatKotakLangkah(langkah);
         }
     } 
     else if (operasi === 'determinan') {
@@ -159,31 +174,58 @@ tombolHitung.addEventListener('click', function() {
             teksHasil = "<strong>Determinan: </strong>" + MatriksA[0][0];
         } else if (barisA === 2) {
             let determinan = (MatriksA[0][0] * MatriksA[1][1]) - (MatriksA[0][1] * MatriksA[1][0]);
-            teksHasil = "<strong>Determinan (2x2): </strong>" + determinan;
+            let langkah = [
+                "Rumus 2x2 : (a x d) - (b x c)",
+                "= (" + MatriksA[0][0] + " x " + MatriksA[1][1] + ") - (" + MatriksA[0][1] + " x " + MatriksA[1][0] + ")",
+                "= " + (MatriksA[0][0] * MatriksA[1][1]) + " - " + (MatriksA[0][1] * MatriksA[1][0]),
+                "= " + determinan
+            ];
+            teksHasil = "<strong>Determinan (2x2): </strong>" + determinan + buatKotakLangkah(langkah);
         } else if (barisA === 3) {
-            let determinan = (MatriksA[0][0] * MatriksA[1][1] * MatriksA[2][2]) + 
-                             (MatriksA[0][1] * MatriksA[1][2] * MatriksA[2][0]) + 
-                             (MatriksA[0][2] * MatriksA[1][0] * MatriksA[2][1]) - 
-                             (MatriksA[0][2] * MatriksA[1][1] * MatriksA[2][0]) - 
-                             (MatriksA[0][0] * MatriksA[1][2] * MatriksA[2][1]) - 
-                             (MatriksA[0][1] * MatriksA[1][0] * MatriksA[2][2]);
-            teksHasil = "<strong>Determinan (3x3): </strong>" + determinan;
+            let s1 = MatriksA[0][0] * MatriksA[1][1] * MatriksA[2][2];
+            let s2 = MatriksA[0][1] * MatriksA[1][2] * MatriksA[2][0];
+            let s3 = MatriksA[0][2] * MatriksA[1][0] * MatriksA[2][1];
+            let s4 = MatriksA[0][2] * MatriksA[1][1] * MatriksA[2][0];
+            let s5 = MatriksA[0][0] * MatriksA[1][2] * MatriksA[2][1];
+            let s6 = MatriksA[0][1] * MatriksA[1][0] * MatriksA[2][2];
+
+            let determinan = s1 + s2 + s3 - s4 - s5 - s6;
+
+            let langkah = [
+                "Aturan Sarrus : tiga diagonal ke kanan dikurangi tiga diagonal ke kiri",
+                "Diagonal kanan 1 : " + MatriksA[0][0] + " x " + MatriksA[1][1] + " x " + MatriksA[2][2] + " = " + s1,
+                "Diagonal kanan 2 : " + MatriksA[0][1] + " x " + MatriksA[1][2] + " x " + MatriksA[2][0] + " = " + s2,
+                "Diagonal kanan 3 : " + MatriksA[0][2] + " x " + MatriksA[1][0] + " x " + MatriksA[2][1] + " = " + s3,
+                "Diagonal kiri 1  : " + MatriksA[0][2] + " x " + MatriksA[1][1] + " x " + MatriksA[2][0] + " = " + s4,
+                "Diagonal kiri 2  : " + MatriksA[0][0] + " x " + MatriksA[1][2] + " x " + MatriksA[2][1] + " = " + s5,
+                "Diagonal kiri 3  : " + MatriksA[0][1] + " x " + MatriksA[1][0] + " x " + MatriksA[2][2] + " = " + s6,
+                "= (" + s1 + " + " + s2 + " + " + s3 + ") - (" + s4 + " + " + s5 + " + " + s6 + ")",
+                "= " + (s1 + s2 + s3) + " - " + (s4 + s5 + s6),
+                "= " + determinan
+            ];
+            teksHasil = "<strong>Determinan (3x3): </strong>" + determinan + buatKotakLangkah(langkah);
         } else {
             teksHasil = "<span class='pesan-error'>Maksimal ordo 3x3 untuk determinan.</span>";
         }
     }
     else if (operasi === 'transpose') {
         let MatriksHasil = [];
+        let langkah = [];
+        langkah.push("Setiap elemen ditukar posisi baris dan kolomnya.");
 
         for (let i = 0; i < kolomA; i++) {
             let barisHasil = [];
             for (let j = 0; j < barisA; j++) {
-                barisHasil.push(MatriksA[j][i]);
+                barisHasil.push(MatriksA[j][i]);  
+                langkah.push("Nilai " + MatriksA[j][i] +
+                             " dari posisi (" + (j + 1) + "," + (i + 1) + ")" +
+                             " pindah ke posisi (" + (i + 1) + "," + (j + 1) + ")");
             }
             MatriksHasil.push(barisHasil);
         }
 
-        teksHasil = "<strong>Transpose Matriks A:</strong>" + buatTabel(MatriksHasil);
+        teksHasil = "<strong>Transpose Matriks A:</strong>" +
+                    buatTabel(MatriksHasil) + buatKotakLangkah(langkah);
     }
     else if (operasi === 'invers') {
         if (barisA !== kolomA) {
@@ -193,7 +235,6 @@ tombolHitung.addEventListener('click', function() {
             if (MatriksHasil === null) {
                 teksHasil = "<span class='pesan-error'>Error: Matriks singular (determinan = 0), tidak punya invers.</span>";
             } else {
-                // Bulatkan 4 desimal biar ga muncul noise floating point (misal 0.9999999999)
                 let MatriksBulat = MatriksHasil.map(baris => baris.map(v => Math.round(v * 10000) / 10000));
                 teksHasil = "<strong>Invers Matriks A:</strong>" + buatTabel(MatriksBulat);
             }
@@ -205,14 +246,19 @@ else if (operasi === 'skalar') {
         teksHasil = "<span class='pesan-error'>Error: Isi dulu nilai skalarnya.</span>";
     } else {
         let MatriksHasil = [];
+        let langkah = [];
         for (let i = 0; i < barisA; i++) {
             let barisHasil = [];
             for (let j = 0; j < kolomA; j++) {
-                barisHasil.push(MatriksA[i][j] * skalar);
+                let nilai = MatriksA[i][j] * skalar;
+                barisHasil.push(nilai);
+                langkah.push("Posisi (" + (i + 1) + "," + (j + 1) + ") : " +
+                             MatriksA[i][j] + " x " + skalar + " = " + nilai);
             }
             MatriksHasil.push(barisHasil);
         }
-        teksHasil = "<strong>Hasil " + skalar + " x Matriks A:</strong>" + buatTabel(MatriksHasil);
+        teksHasil = "<strong>Hasil " + skalar + " x Matriks A:</strong>" +
+                    buatTabel(MatriksHasil) + buatKotakLangkah(langkah);
     }
 }
 else if (operasi === 'pangkat') {
@@ -243,14 +289,6 @@ else if (operasi === 'pangkat') {
 }
 
     document.getElementById('tampilanHasil').innerHTML = teksHasil;
-});
-
-pilihOperasi.addEventListener('change', function() {
-    if (pilihOperasi.value === 'skalar' || pilihOperasi.value === 'pangkat') {
-        kotakNilaiEkstra.style.display = 'block';
-    } else {
-        kotakNilaiEkstra.style.display = 'none';
-    }
 });
 
 function invertMatrix(matrix) {
@@ -309,3 +347,160 @@ function buatTabel(arrayMatriks) {
     tabel += '</table>';
     return tabel;
 }
+
+function buatKotakLangkah(daftarLangkah) {
+    let isi = '<div class="kotak-langkah">';
+    isi += '<p class="judul-langkah">Cara perhitungan:</p>';
+    for (let i = 0; i < daftarLangkah.length; i++) {
+        isi += '<p>' + daftarLangkah[i] + '</p>';
+    }
+    isi += '</div>';
+    return isi;
+}
+
+const aturanOperasi = {
+    tambah: {
+        butuhB: true,
+        persegi: false,
+        judul: "Penjumlahan (A + B)",
+        isi: "Menjumlahkan setiap angka pada posisi yang sama di kedua matriks.",
+        syarat: "Ordo Matriks A dan B harus sama persis.",
+        langkah: ["Isi ordo Matriks A dan Matriks B dengan ukuran yang sama.", "Klik Generate, lalu isi angka pada kedua matriks.", "Klik Hitung Matriks."]
+    },
+    kurang: {
+        butuhB: true,
+        persegi: false,
+        judul: "Pengurangan (A - B)",
+        isi: "Mengurangi setiap angka Matriks A dengan angka Matriks B pada posisi yang sama.",
+        syarat: "Ordo Matriks A dan B harus sama persis.",
+        langkah: ["Isi ordo Matriks A dan Matriks B dengan ukuran yang sama.", "Klik Generate, lalu isi angka pada kedua matriks.", "Klik Hitung Matriks."]
+    },
+    kali: {
+        butuhB: true,
+        persegi: false,
+        judul: "Perkalian (A x B)",
+        isi: "Mengalikan baris Matriks A dengan kolom Matriks B, lalu menjumlahkan hasilnya.",
+        syarat: "Jumlah kolom Matriks A harus sama dengan jumlah baris Matriks B.",
+        langkah: ["Isi ordo A, lalu isi ordo B dengan baris yang sama dengan kolom A.", "Klik Generate, lalu isi angka pada kedua matriks.", "Klik Hitung Matriks."]
+    },
+    skalar: {
+        butuhB: false,
+        persegi: false,
+        judul: "Perkalian Skalar (k x A)",
+        isi: "Mengalikan seluruh angka pada Matriks A dengan satu bilangan.",
+        syarat: "Hanya perlu Matriks A. Ukuran bebas.",
+        langkah: ["Isi ordo Matriks A saja, Matriks B boleh dikosongkan.", "Klik Generate, lalu isi angka Matriks A.", "Isi bilangan pengali pada kotak di bawah, lalu klik Hitung Matriks."]
+    },
+    pangkat: {
+        butuhB: false,
+        persegi: true,
+        judul: "Pangkat Matriks (A^n)",
+        isi: "Mengalikan Matriks A dengan dirinya sendiri sebanyak n kali.",
+        syarat: "Matriks A harus persegi (jumlah baris sama dengan kolom).",
+        langkah: ["Isi ordo Matriks A dengan baris dan kolom yang sama, misal 3 dan 3.", "Klik Generate, lalu isi angka Matriks A.", "Isi nilai pangkat pada kotak di bawah, lalu klik Hitung Matriks."]
+    },
+    determinan: {
+        butuhB: false,
+        persegi: true,
+        judul: "Determinan Matriks A",
+        isi: "Menghitung satu nilai yang mewakili matriks, hasilnya berupa angka tunggal.",
+        syarat: "Matriks A harus persegi, maksimal ordo 3x3.",
+        langkah: ["Isi ordo Matriks A dengan baris dan kolom yang sama, maksimal 3.", "Klik Generate, lalu isi angka Matriks A.", "Klik Hitung Matriks."]
+    },
+    transpose: {
+        butuhB: false,
+        persegi: false,
+        judul: "Transpose Matriks A",
+        isi: "Menukar baris menjadi kolom. Matriks 2x3 akan menjadi 3x2.",
+        syarat: "Tidak ada syarat khusus, ukuran bebas.",
+        langkah: ["Isi ordo Matriks A saja, Matriks B boleh dikosongkan.", "Klik Generate, lalu isi angka Matriks A.", "Klik Hitung Matriks."]
+    },
+    invers: {
+        butuhB: false,
+        persegi: true,
+        judul: "Invers Matriks A",
+        isi: "Mencari matriks kebalikan, yaitu matriks yang jika dikalikan dengan A menghasilkan matriks identitas.",
+        syarat: "Matriks A harus persegi dan determinannya tidak boleh 0.",
+        langkah: ["Isi ordo Matriks A dengan baris dan kolom yang sama.", "Klik Generate, lalu isi angka Matriks A.", "Klik Hitung Matriks."]
+    }
+};
+
+function perbaruiPanduan() {
+    const operasi = pilihOperasi.value;
+    const aturan = aturanOperasi[operasi];
+
+    const barisA = parseInt(document.getElementById('barisA').value);
+    const kolomA = parseInt(document.getElementById('kolomA').value);
+    const barisB = parseInt(document.getElementById('barisB').value);
+    const kolomB = parseInt(document.getElementById('kolomB').value);
+
+    let teks = "<strong>" + aturan.judul + "</strong><br>";
+    teks += aturan.isi + "<br>";
+    teks += "<em>Syarat: " + aturan.syarat + "</em>";
+    teks += "<ol>";
+    for (let i = 0; i < aturan.langkah.length; i++) {
+        teks += "<li>" + aturan.langkah[i] + "</li>";
+    }
+    teks += "</ol>";
+    petunjukOperasi.innerHTML = teks;
+
+    if (operasi === 'skalar' || operasi === 'pangkat') {
+        kotakNilaiEkstra.style.display = 'block';
+    } else {
+        kotakNilaiEkstra.style.display = 'none';
+    }
+
+    const blokB = document.getElementById('barisB').closest('.form');
+    if (aturan.butuhB) {
+        blokB.classList.remove('form-redup');
+    } else {
+        blokB.classList.add('form-redup');
+    }
+
+    statusOrdo.className = 'petunjuk';
+
+    if (isNaN(barisA) || isNaN(kolomA)) {
+        statusOrdo.textContent = "Isi baris dan kolom Matriks A terlebih dahulu.";
+        return;
+    }
+
+    if (aturan.persegi && barisA !== kolomA) {
+        statusOrdo.textContent = "Operasi ini butuh matriks persegi. Samakan baris dan kolom Matriks A.";
+        statusOrdo.classList.add('petunjuk-ingat');
+        return;
+    }
+
+    if (aturan.butuhB) {
+        if (isNaN(barisB) || isNaN(kolomB)) {
+            statusOrdo.textContent = "Operasi ini juga memerlukan ordo Matriks B.";
+            statusOrdo.classList.add('petunjuk-ingat');
+            return;
+        }
+        if (operasi === 'kali') {
+            if (kolomA !== barisB) {
+                statusOrdo.textContent = "Belum cocok: kolom A (" + kolomA + ") harus sama dengan baris B (" + barisB + ").";
+                statusOrdo.classList.add('petunjuk-ingat');
+                return;
+            }
+            statusOrdo.textContent = "Ordo sudah cocok. Hasil perkalian nanti berukuran " + barisA + "x" + kolomB + ".";
+            statusOrdo.classList.add('petunjuk-ok');
+            return;
+        }
+        if (barisA !== barisB || kolomA !== kolomB) {
+            statusOrdo.textContent = "Belum cocok: ordo A (" + barisA + "x" + kolomA + ") berbeda dengan B (" + barisB + "x" + kolomB + ").";
+            statusOrdo.classList.add('petunjuk-ingat');
+            return;
+        }
+    }
+
+    statusOrdo.textContent = "Ordo sudah sesuai. Silakan klik Generate.";
+    statusOrdo.classList.add('petunjuk-ok');
+}
+
+pilihOperasi.addEventListener('change', perbaruiPanduan);
+document.getElementById('barisA').addEventListener('input', perbaruiPanduan);
+document.getElementById('kolomA').addEventListener('input', perbaruiPanduan);
+document.getElementById('barisB').addEventListener('input', perbaruiPanduan);
+document.getElementById('kolomB').addEventListener('input', perbaruiPanduan);
+
+perbaruiPanduan();
